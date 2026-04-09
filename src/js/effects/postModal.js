@@ -47,8 +47,12 @@ export class PostModal {
 export function renderPosts() {
     const posts = getAllPosts();
     const grid = document.getElementById('articlesGrid');
-    if (!grid) return;
+    if (!grid) {
+        console.error('articlesGrid not found');
+        return;
+    }
     
+    console.log('Rendering', posts.length, 'posts');
     grid.innerHTML = '';
     
     posts.forEach((post, index) => {

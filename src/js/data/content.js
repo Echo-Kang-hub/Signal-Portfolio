@@ -31,7 +31,8 @@ export const experimentsData = [
         </svg>`,
         title: '粒子引力场',
         desc: '模拟万有引力的粒子系统，观察秩序如何在混沌中涌现',
-        tech: ['Canvas 2D', 'Physics', 'ES6']
+        tech: ['Canvas 2D', 'Physics', 'ES6'],
+        link: '#'
     },
     {
         icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2">
@@ -41,7 +42,8 @@ export const experimentsData = [
         </svg>`,
         title: '3D体素引擎',
         desc: '纯JavaScript实现的体素渲染器，探索三维空间的数字构建',
-        tech: ['WebGL', '3D Graphics', 'GLSL']
+        tech: ['WebGL', '3D Graphics', 'GLSL'],
+        link: '#'
     },
     {
         icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e07a5f" stroke-width="2">
@@ -51,7 +53,8 @@ export const experimentsData = [
         </svg>`,
         title: '音频可视化器',
         desc: '实时音频频谱分析与视觉化，让声音看得见',
-        tech: ['Web Audio', 'Canvas', 'FFT']
+        tech: ['Web Audio', 'Canvas', 'FFT'],
+        link: '#'
     },
     {
         icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#44a08d" stroke-width="2">
@@ -61,7 +64,8 @@ export const experimentsData = [
         </svg>`,
         title: '生成艺术引擎',
         desc: '算法驱动的图像生成，每次刷新都是独一无二的艺术品',
-        tech: ['Algorithm', 'Random', 'SVG']
+        tech: ['Algorithm', 'Random', 'SVG'],
+        link: '#'
     }
 ];
 

@@ -86,6 +86,40 @@ class App {
         renderPosts();
     }
 
+    renderExperiments() {
+        console.log('renderExperiments called', experimentsData);
+        const grid = document.getElementById('experimentsGrid');
+        if (!grid) {
+            console.error('experimentsGrid not found');
+            return;
+        }
+
+        grid.innerHTML = '';
+        
+        experimentsData.forEach(experiment => {
+            const card = document.createElement('div');
+            card.className = 'experiment-card reveal';
+            card.innerHTML = `
+                <div class="experiment-icon">
+                    ${experiment.icon}
+                </div>
+                <h3 class="experiment-title">${experiment.title}</h3>
+                <p class="experiment-desc">${experiment.desc}</p>
+                <div class="experiment-tech">
+                    ${experiment.tech.map(t => `<span class="tech-badge">${t}</span>`).join('')}
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                if (experiment.link && experiment.link !== '#') {
+                    window.open(experiment.link, '_blank');
+                }
+            });
+            
+            grid.appendChild(card);
+        });
+    }
+
     initPostModal() {
         PostModal.init();
     }

@@ -1046,16 +1046,49 @@ section {
 }
 
 .post-body pre {
-    background: var(--bg-secondary);
-    padding: 1.5rem;
-    border-radius: 8px;
-    overflow-x: auto;
+    background: #1e1e2e;
+    border-radius: 12px;
+    overflow: hidden;
     margin: 1.5rem 0;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 .post-body pre code {
-    background: none;
-    padding: 0;
+    display: block;
+    padding: 1.25rem 1.5rem;
+    background: transparent;
+    font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: #cdd6f4;
+}
+
+/* macOS window header */
+.post-body pre .code-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #181825;
+    gap: 8px;
+    border-bottom: 1px solid #313244;
+}
+
+.post-body pre .code-header .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.post-body pre .code-header .dot.red { background: #ff5f56; }
+.post-body pre .code-header .dot.yellow { background: #ffbd2e; }
+.post-body pre .code-header .dot.green { background: #27c93f; }
+
+.post-body pre .code-header .code-lang {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: #6c7086;
+    text-transform: uppercase;
 }
 
 .post-body a {
