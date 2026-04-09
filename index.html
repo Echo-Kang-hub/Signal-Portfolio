@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative Signals - 探索技术与艺术的交汇点，一个现代感十足的个人博客与作品集网站">
+    <meta name="keywords" content="creative coding, webgl, portfolio, interactive design, digital art">
+    <title>Creative Signals - 创意信号</title>
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="icon" href="src/assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+    <div id="app">
+        <!-- 鼠标粒子容器 -->
+        <canvas id="mouseParticles" aria-hidden="true"></canvas>
+
+        <!-- 导航栏 -->
+        <nav class="navbar" id="navbar">
+            <div class="nav-container">
+                <a href="#hero" class="logo">Creative Signals</a>
+                <ul class="nav-links">
+                    <li><a href="#hero" class="nav-link">首页</a></li>
+                    <li><a href="#articles" class="nav-link">文章</a></li>
+                    <li><a href="#experiments" class="nav-link">实验</a></li>
+                    <li><a href="#timeline" class="nav-link">历程</a></li>
+                    <li><a href="#contact" class="nav-link">联系</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Hero区域 -->
+        <section id="hero" class="hero-section">
+            <canvas id="signalCanvas" aria-hidden="true"></canvas>
+            <div class="hero-content">
+                <span class="hero-tag">探索 · 实验 · 创造</span>
+                <h1 class="hero-title">
+                    在技术与艺术的<br><span class="highlight">交汇点发射信号</span>
+                </h1>
+                <p class="hero-subtitle">
+                    这里记录着关于创意编程、交互设计与数字艺术的思考与实践。
+                    每一个像素都承载着对未知的探索。
+                </p>
+                <div class="hero-buttons">
+                    <a href="#articles" class="btn btn-primary">探索作品</a>
+                    <a href="#interactive-demo" class="btn btn-secondary">体验演示</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 精选文章 -->
+        <section id="articles" class="articles-section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Writings</span>
+                    <h2 class="section-title">精选文章</h2>
+                    <p class="section-desc">深度思考与技术探索的记录，关于创意编程、交互设计与数字艺术</p>
+                </div>
+                <div class="articles-grid" id="articlesGrid">
+                    <!-- 文章卡片将通过JS动态生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 实验板块 -->
+        <section id="experiments" class="experiments-section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Laboratory</span>
+                    <h2 class="section-title">实验工坊</h2>
+                    <p class="section-desc">探索技术边界的交互式实验项目</p>
+                </div>
+                <div class="experiments-grid" id="experimentsGrid">
+                    <!-- 实验卡片将通过JS动态生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 交互演示区 -->
+        <section id="interactive-demo" class="demo-section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Interactive</span>
+                    <h2 class="section-title">实时演示</h2>
+                    <p class="section-desc">移动鼠标与粒子互动，体验创意编程的魅力</p>
+                </div>
+                <div class="demo-container reveal">
+                    <div class="demo-header">
+                        <span class="demo-title">particle-attractor.js</span>
+                        <div class="demo-controls">
+                            <span class="demo-btn close"></span>
+                            <span class="demo-btn minimize"></span>
+                            <span class="demo-btn maximize"></span>
+                        </div>
+                    </div>
+                    <canvas id="demoCanvas"></canvas>
+                    <div class="demo-footer">
+                        <span>粒子数量: <span id="particleCount">0</span></span>
+                        <span>帧率: <span id="fps">0</span> FPS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 时间线 -->
+        <section id="timeline" class="timeline-section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Journey</span>
+                    <h2 class="section-title">成长轨迹</h2>
+                    <p class="section-desc">关键里程碑与重要时刻</p>
+                </div>
+                <div class="timeline-wrapper" id="timelineWrapper">
+                    <!-- 时间线项目将通过JS动态生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系表单 -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Connect</span>
+                    <h2 class="section-title">取得联系</h2>
+                    <p class="section-desc">有项目想法或合作意向？随时与我联系</p>
+                </div>
+                <div class="contact-wrapper reveal">
+                    <div class="contact-info">
+                        <h3>让我们一起创造</h3>
+                        <p>无论是商业项目、艺术合作还是单纯的技术交流，我都期待与你的对话。</p>
+                        <div class="contact-links">
+                            <a href="mailto:hello@creativesignals.com" class="contact-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                hello@creativesignals.com
+                            </a>
+                            <span class="contact-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                上海，中国
+                            </span>
+                        </div>
+                    </div>
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">姓名</label>
+                            <input type="text" id="name" placeholder="你的名字" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">留言</label>
+                            <textarea id="message" placeholder="想说的话..." required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">发送信号</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="site-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>Creative Signals</h4>
+                        <p>在数字宇宙中发射创意信号，<br>探索技术与艺术的无限可能。</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>导航</h4>
+                        <ul class="footer-links">
+                            <li><a href="#articles">文章</a></li>
+                            <li><a href="#experiments">实验项目</a></li>
+                            <li><a href="#timeline">关于我</a></li>
+                            <li><a href="#contact">联系</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>精选链接</h4>
+                        <ul class="footer-links">
+                            <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                            <li><a href="https://codepen.io" target="_blank" rel="noopener noreferrer">CodePen</a></li>
+                            <li><a href="https://dribbble.com" target="_blank" rel="noopener noreferrer">Dribbble</a></li>
+                            <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>灵感来源</h4>
+                        <div class="inspiration-tags">
+                            <span class="inspiration-tag">Generative Art</span>
+                            <span class="inspiration-tag">Creative Coding</span>
+                            <span class="inspiration-tag">GLSL</span>
+                            <span class="inspiration-tag">Three.js</span>
+                            <span class="inspiration-tag">p5.js</span>
+                            <span class="inspiration-tag">Processing</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>Creative Signals 2024. Crafted with passion.</p>
+                    <div class="social-links">
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- 文章详情模态框 -->
+        <div class="post-modal" id="postModal">
+            <div class="post-modal-overlay"></div>
+            <div class="post-modal-content">
+                <button class="post-modal-close" aria-label="关闭">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <article class="post-detail">
+                    <header class="post-header">
+                        <span class="post-tag" id="postTag"></span>
+                        <span class="post-date" id="postDate"></span>
+                    </header>
+                    <h1 class="post-title" id="postTitle"></h1>
+                    <div class="post-body" id="postBody"></div>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="src/js/main.js"></script>
+</body>
+</html>

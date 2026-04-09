@@ -1,0 +1,28 @@
+{
+  "name": "creative-signals",
+  "version": "1.0.0",
+  "description": "A modern portfolio and blog website with interactive canvas effects",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve .",
+    "preview": "npx serve . -p 3000"
+  },
+  "keywords": [
+    "portfolio",
+    "blog",
+    "creative-coding",
+    "canvas",
+    "animation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/creative-signals.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/creative-signals/issues"
+  },
+  "homepage": "https://github.com/yourusername/creative-signals#readme"
+}

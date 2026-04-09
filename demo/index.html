@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Signals - 创意信号</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #12121a;
+            --bg-card: #16161f;
+            --text-primary: #f0f0f2;
+            --text-secondary: #9a9aa8;
+            --accent-gold: #d4a853;
+            --accent-cyan: #4ecdc4;
+            --accent-coral: #e07a5f;
+            --gradient-warm: linear-gradient(135deg, #d4a853 0%, #e07a5f 100%);
+            --gradient-cool: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 12, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.7rem 2rem;
+            background: rgba(10, 10, 12, 0.95);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-warm);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero区域 */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 6rem 2rem 4rem;
+            overflow: hidden;
+        }
+
+        #signalCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid var(--accent-gold);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero-title .highlight {
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-warm);
+            color: var(--bg-primary);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 168, 83, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            transform: translateY(-3px);
+        }
+
+        /* 通用区块样式 */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 精选文章 */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px) rotateX(2deg);
+            border-color: rgba(212, 168, 83, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .article-card:hover::before {
+            opacity: 1;
+        }
+
+        .article-media {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-media canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .article-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .article-card:hover .article-media img {
+            transform: scale(1.05);
+        }
+
+        .article-content {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .article-tag {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            background: rgba(212, 168, 83, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .article-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .article-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .article-card:hover .article-title {
+            color: var(--accent-gold);
+        }
+
+        .article-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* 实验板块 */
+        #experiments {
+            background: var(--bg-secondary);
+            max-width: 100%;
+            padding: 6rem 2rem;
+        }
+
+        #experiments .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .experiments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .experiment-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .experiment-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(78, 205, 196, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .experiment-card:hover::after {
+            opacity: 1;
+        }
+
+        .experiment-card:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-cyan);
+        }
+
+        .experiment-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .experiment-card:nth-child(1) .experiment-icon {
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.2), rgba(224, 122, 95, 0.2));
+        }
+
+        .experiment-card:nth-child(2) .experiment-icon {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(68, 160, 141, 0.2));
+        }
+
+        .experiment-card:nth-child(3) .experiment-icon {
+            background: linear-gradient(135deg, rgba(224, 122, 95, 0.2), rgba(212, 168, 83, 0.2));
+        }
+
+        .experiment-card:nth-child(4) .experiment-icon {
+            background: linear-gradient(135deg, rgba(68, 160, 141, 0.2), rgba(78, 205, 196, 0.2));
+        }
+
+        .experiment-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .experiment-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .experiment-tech {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tech-badge {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.7rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            color: var(--text-secondary);
+        }
+
+        /* 交互演示区 */
+        #interactive-demo {
+            position: relative;
+        }
+
+        .demo-container {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .demo-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .demo-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .demo-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .demo-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .demo-btn.close { background: #e07a5f; }
+        .demo-btn.minimize { background: #d4a853; }
+        .demo-btn.maximize { background: #4ecdc4; }
+
+        #demoCanvas {
+            width: 100%;
+            height: 400px;
+            display: block;
+            cursor: crosshair;
+        }
+
+        .demo-footer {
+            padding: 1rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* 时间线 */
+        #timeline {
+            background: var(--bg-secondary);
+            max-width: 100%;
+            padding: 6rem 2rem;
+        }
+
+        #timeline .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline-wrapper {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline-wrapper::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-gold), var(--accent-cyan));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 0.5rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 3px solid var(--accent-gold);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover::before {
+            transform: scale(1.3);
+            box-shadow: 0 0 20px rgba(212, 168, 83, 0.5);
+        }
+
+        .timeline-year {
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* 联系表单 */
+        #contact .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .contact-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-link:hover {
+            color: var(--accent-gold);
+        }
+
+        .contact-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .contact-form {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-warm);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 168, 83, 0.3);
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--bg-secondary);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-gold);
+        }
+
+        .inspiration-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .inspiration-tag {
+            padding: 0.4rem 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .inspiration-tag:hover {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--accent-cyan);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            transform: translateY(-3px);
+        }
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 鼠标粒子容器 */
+        #mouseParticles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+        }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--accent-gold), var(--accent-cyan));
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 鼠标粒子容器 -->
+    <canvas id="mouseParticles"></canvas>
+
+    <!-- 导航栏 -->
+    <nav>
+        <div class="logo">Creative Signals</div>
+        <ul class="nav-links">
+            <li><a href="#hero">首页</a></li>
+            <li><a href="#articles">文章</a></li>
+            <li><a href="#experiments">实验</a></li>
+            <li><a href="#timeline">历程</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section id="hero">
+        <canvas id="signalCanvas"></canvas>
+        <div class="hero-content">
+            <span class="hero-tag">探索 · 实验 · 创造</span>
+            <h1 class="hero-title">
+                在技术与艺术的<br><span class="highlight">交汇点发射信号</span>
+            </h1>
+            <p class="hero-subtitle">
+                这里记录着关于创意编程、交互设计与数字艺术的思考与实践。
+                每一个像素都承载着对未知的探索。
+            </p>
+            <div class="hero-buttons">
+                <a href="#articles" class="btn btn-primary">探索作品</a>
+                <a href="#interactive-demo" class="btn btn-secondary">体验演示</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 精选文章 -->
+    <section id="articles">
+        <div class="section-header reveal">
+            <span class="section-tag">Writings</span>
+            <h2 class="section-title">精选文章</h2>
+            <p class="section-desc">深度思考与技术探索的记录，关于创意编程、交互设计与数字艺术</p>
+        </div>
+        <div class="articles-grid">
+            <article class="article-card reveal">
+                <div class="article-media">
+                    <canvas id="articleCanvas1"></canvas>
+                </div>
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="article-tag">WebGL</span>
+                        <span class="article-date">2024.01.15</span>
+                    </div>
+                    <h3 class="article-title">着色器艺术：从数学到视觉诗篇</h3>
+                    <p class="article-excerpt">探索GLSL着色器如何将数学公式转化为流动的视觉艺术，解密生成式美学的底层逻辑。</p>
+                </div>
+            </article>
+            <article class="article-card reveal">
+                <div class="article-media">
+                    <canvas id="articleCanvas2"></canvas>
+                </div>
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="article-tag">交互设计</span>
+                        <span class="article-date">2024.01.08</span>
+                    </div>
+                    <h3 class="article-title">微交互的宏观影响</h3>
+                    <p class="article-excerpt">那些看似微不足道的动效细节，如何累积成令人难忘的用户体验。</p>
+                </div>
+            </article>
+            <article class="article-card reveal">
+                <div class="article-media">
+                    <canvas id="articleCanvas3"></canvas>
+                </div>
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="article-tag">创意编程</span>
+                        <span class="article-date">2023.12.20</span>
+                    </div>
+                    <h3 class="article-title">代码即画笔：Canvas深度潜入</h3>
+                    <p class="article-excerpt">从基础API到高级渲染技巧，掌握Canvas绘制的完整知识体系。</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- 实验板块 -->
+    <section id="experiments">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Laboratory</span>
+                <h2 class="section-title">实验工坊</h2>
+                <p class="section-desc">探索技术边界的交互式实验项目</p>
+            </div>
+            <div class="experiments-grid">
+                <div class="experiment-card reveal">
+                    <div class="experiment-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                        </svg>
+                    </div>
+                    <h3 class="experiment-title">粒子引力场</h3>
+                    <p class="experiment-desc">模拟万有引力的粒子系统，观察秩序如何在混沌中涌现</p>
+                    <div class="experiment-tech">
+                        <span class="tech-badge">Canvas 2D</span>
+                        <span class="tech-badge">Physics</span>
+                        <span class="tech-badge">ES6</span>
+                    </div>
+                </div>
+                <div class="experiment-card reveal">
+                    <div class="experiment-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2">
+                            <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+                            <line x1="12" y1="22" x2="12" y2="15.5"/>
+                            <polyline points="22 8.5 12 15.5 2 8.5"/>
+                        </svg>
+                    </div>
+                    <h3 class="experiment-title">3D体素引擎</h3>
+                    <p class="experiment-desc">纯JavaScript实现的体素渲染器，探索三维空间的数字构建</p>
+                    <div class="experiment-tech">
+                        <span class="tech-badge">WebGL</span>
+                        <span class="tech-badge">3D Graphics</span>
+                        <span class="tech-badge">GLSL</span>
+                    </div>
+                </div>
+                <div class="experiment-card reveal">
+                    <div class="experiment-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e07a5f" stroke-width="2">
+                            <path d="M12 3v18"/>
+                            <path d="M18.5 8.5c-3.5-3.5-9-3.5-12.5 0"/>
+                            <path d="M18.5 15.5c-3.5 3.5-9 3.5-12.5 0"/>
+                        </svg>
+                    </div>
+                    <h3 class="experiment-title">音频可视化器</h3>
+                    <p class="experiment-desc">实时音频频谱分析与视觉化，让声音看得见</p>
+                    <div class="experiment-tech">
+                        <span class="tech-badge">Web Audio</span>
+                        <span class="tech-badge">Canvas</span>
+                        <span class="tech-badge">FFT</span>
+                    </div>
+                </div>
+                <div class="experiment-card reveal">
+                    <div class="experiment-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#44a08d" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <path d="M21 15l-5-5L5 21"/>
+                        </svg>
+                    </div>
+                    <h3 class="experiment-title">生成艺术引擎</h3>
+                    <p class="experiment-desc">算法驱动的图像生成，每次刷新都是独一无二的艺术品</p>
+                    <div class="experiment-tech">
+                        <span class="tech-badge">Algorithm</span>
+                        <span class="tech-badge">Random</span>
+                        <span class="tech-badge">SVG</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 交互演示区 -->
+    <section id="interactive-demo">
+        <div class="section-header reveal">
+            <span class="section-tag">Interactive</span>
+            <h2 class="section-title">实时演示</h2>
+            <p class="section-desc">移动鼠标与粒子互动，体验创意编程的魅力</p>
+        </div>
+        <div class="demo-container reveal">
+            <div class="demo-header">
+                <span class="demo-title">particle-attractor.js</span>
+                <div class="demo-controls">
+                    <span class="demo-btn close"></span>
+                    <span class="demo-btn minimize"></span>
+                    <span class="demo-btn maximize"></span>
+                </div>
+            </div>
+            <canvas id="demoCanvas"></canvas>
+            <div class="demo-footer">
+                <span>粒子数量: <span id="particleCount">0</span></span>
+                <span>帧率: <span id="fps">0</span> FPS</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 时间线 -->
+    <section id="timeline">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Journey</span>
+                <h2 class="section-title">成长轨迹</h2>
+                <p class="section-desc">关键里程碑与重要时刻</p>
+            </div>
+            <div class="timeline-wrapper">
+                <div class="timeline-item">
+                    <span class="timeline-year">2024</span>
+                    <h3 class="timeline-title">创意信号诞生</h3>
+                    <p class="timeline-desc">整合多年积累，创建这个融合博客与作品集的个人空间，开启新的创作阶段。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2023</span>
+                    <h3 class="timeline-title">WebGL深度探索</h3>
+                    <p class="timeline-desc">完成多个基于WebGL的交互式艺术项目，作品被多个设计平台推荐收录。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2022</span>
+                    <h3 class="timeline-title">创意编程转型</h3>
+                    <p class="timeline-desc">从前端工程师转型为创意开发者，开始系统学习生成艺术与计算设计。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2020</span>
+                    <h3 class="timeline-title">首个开源项目</h3>
+                    <p class="timeline-desc">发布首个获得社区认可的开源动画库，GitHub Star突破1000。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2018</span>
+                    <h3 class="timeline-title">职业起点</h3>
+                    <p class="timeline-desc">正式踏入互联网行业，作为一名初级前端开发者开始职业生涯。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系表单 -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Connect</span>
+                <h2 class="section-title">取得联系</h2>
+                <p class="section-desc">有项目想法或合作意向？随时与我联系</p>
+            </div>
+            <div class="contact-wrapper reveal">
+                <div class="contact-info">
+                    <h3>让我们一起创造</h3>
+                    <p>无论是商业项目、艺术合作还是单纯的技术交流，我都期待与你的对话。</p>
+                    <div class="contact-links">
+                        <a href="#" class="contact-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            hello@creativesignals.com
+                        </a>
+                        <a href="#" class="contact-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            上海，中国
+                        </a>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">姓名</label>
+                        <input type="text" id="name" placeholder="你的名字" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">留言</label>
+                        <textarea id="message" placeholder="想说的话..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">发送信号</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Creative Signals</h4>
+                <p>在数字宇宙中发射创意信号，<br>探索技术与艺术的无限可能。</p>
+            </div>
+            <div class="footer-section">
+                <h4>导航</h4>
+                <ul class="footer-links">
+                    <li><a href="#articles">文章</a></li>
+                    <li><a href="#experiments">实验项目</a></li>
+                    <li><a href="#timeline">关于我</a></li>
+                    <li><a href="#contact">联系</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>精选链接</h4>
+                <ul class="footer-links">
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">CodePen</a></li>
+                    <li><a href="#">Dribbble</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>灵感来源</h4>
+                <div class="inspiration-tags">
+                    <span class="inspiration-tag">Generative Art</span>
+                    <span class="inspiration-tag">Creative Coding</span>
+                    <span class="inspiration-tag">GLSL</span>
+                    <span class="inspiration-tag">Three.js</span>
+                    <span class="inspiration-tag">p5.js</span>
+                    <span class="inspiration-tag">Processing</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Creative Signals 2024. Crafted with passion.</p>
+            <div class="social-links">
+                <a href="#">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="#">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                </a>
+                <a href="#">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ========== 导航栏滚动效果 ==========
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // ========== Hero信号波背景 ==========
+        const signalCanvas = document.getElementById('signalCanvas');
+        const signalCtx = signalCanvas.getContext('2d');
+        let signalTime = 0;
+
+        function resizeSignalCanvas() {
+            signalCanvas.width = window.innerWidth;
+            signalCanvas.height = window.innerHeight;
+        }
+        resizeSignalCanvas();
+        window.addEventListener('resize', resizeSignalCanvas);
+
+        function drawSignalWaves() {
+            signalCtx.fillStyle = 'rgba(10, 10, 12, 0.1)';
+            signalCtx.fillRect(0, 0, signalCanvas.width, signalCanvas.height);
+
+            const waves = [
+                { y: signalCanvas.height * 0.3, amp: 50, freq: 0.008, speed: 0.02, color: 'rgba(212, 168, 83, 0.15)' },
+                { y: signalCanvas.height * 0.5, amp: 40, freq: 0.012, speed: 0.025, color: 'rgba(78, 205, 196, 0.12)' },
+                { y: signalCanvas.height * 0.7, amp: 60, freq: 0.006, speed: 0.015, color: 'rgba(224, 122, 95, 0.1)' }
+            ];
+
+            waves.forEach(wave => {
+                signalCtx.beginPath();
+                signalCtx.moveTo(0, wave.y);
+
+                for (let x = 0; x < signalCanvas.width; x += 2) {
+                    const y = wave.y + 
+                        Math.sin(x * wave.freq + signalTime * wave.speed) * wave.amp +
+                        Math.sin(x * wave.freq * 2 + signalTime * wave.speed * 1.5) * wave.amp * 0.3;
+                    signalCtx.lineTo(x, y);
+                }
+
+                signalCtx.strokeStyle = wave.color;
+                signalCtx.lineWidth = 2;
+                signalCtx.stroke();
+
+                // 绘制发光效果
+                signalCtx.shadowBlur = 20;
+                signalCtx.shadowColor = wave.color;
+                signalCtx.stroke();
+                signalCtx.shadowBlur = 0;
+            });
+
+            // 绘制连接线（信号节点）
+            for (let i = 0; i < 5; i++) {
+                const x = (signalTime * 50 + i * signalCanvas.width / 5) % signalCanvas.width;
+                const y = signalCanvas.height * 0.5 + Math.sin(x * 0.01 + signalTime * 0.02) * 40;
+                
+                signalCtx.beginPath();
+                signalCtx.arc(x, y, 4, 0, Math.PI * 2);
+                signalCtx.fillStyle = 'rgba(212, 168, 83, 0.8)';
+                signalCtx.fill();
+
+                // 光晕
+                const gradient = signalCtx.createRadialGradient(x, y, 0, x, y, 30);
+                gradient.addColorStop(0, 'rgba(212, 168, 83, 0.3)');
+                gradient.addColorStop(1, 'rgba(212, 168, 83, 0)');
+                signalCtx.beginPath();
+                signalCtx.arc(x, y, 30, 0, Math.PI * 2);
+                signalCtx.fillStyle = gradient;
+                signalCtx.fill();
+            }
+
+            signalTime++;
+            requestAnimationFrame(drawSignalWaves);
+        }
+        drawSignalWaves();
+
+        // ========== 鼠标粒子效果 ==========
+        const mouseCanvas = document.getElementById('mouseParticles');
+        const mouseCtx = mouseCanvas.getContext('2d');
+        const mouseParticles = [];
+        let mouseX = 0, mouseY = 0;
+
+        function resizeMouseCanvas() {
+            mouseCanvas.width = window.innerWidth;
+            mouseCanvas.height = window.innerHeight;
+        }
+        resizeMouseCanvas();
+        window.addEventListener('resize', resizeMouseCanvas);
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // 添加新粒子
+            for (let i = 0; i < 2; i++) {
+                mouseParticles.push({
+                    x: mouseX + (Math.random() - 0.5) * 10,
+                    y: mouseY + (Math.random() - 0.5) * 10,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    life: 1,
+                    decay: 0.02 + Math.random() * 0.02,
+                    size: 2 + Math.random() * 3,
+                    color: Math.random() > 0.5 ? '#d4a853' : '#4ecdc4'
+                });
+            }
+        });
+
+        function animateMouseParticles() {
+            mouseCtx.clearRect(0, 0, mouseCanvas.width, mouseCanvas.height);
+
+            for (let i = mouseParticles.length - 1; i >= 0; i--) {
+                const p = mouseParticles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= p.decay;
+
+                if (p.life <= 0) {
+                    mouseParticles.splice(i, 1);
+                    continue;
+                }
+
+                mouseCtx.beginPath();
+                mouseCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                mouseCtx.fillStyle = p.color;
+                mouseCtx.globalAlpha = p.life * 0.6;
+                mouseCtx.fill();
+                mouseCtx.globalAlpha = 1;
+            }
+
+            // 限制粒子数量
+            if (mouseParticles.length > 100) {
+                mouseParticles.splice(0, mouseParticles.length - 100);
+            }
+
+            requestAnimationFrame(animateMouseParticles);
+        }
+        animateMouseParticles();
+
+        // ========== 文章卡片Canvas背景 ==========
+        function createArticleCanvas(canvasId, type) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.offsetWidth * 2;
+            canvas.height = canvas.offsetHeight * 2;
+            ctx.scale(2, 2);
+
+            let time = 0;
+
+            function draw() {
+                const width = canvas.width / 2;
+                const height = canvas.height / 2;
+                
+                ctx.fillStyle = '#0a0a0c';
+                ctx.fillRect(0, 0, width, height);
+
+                if (type === 1) {
+                    // 网格 + 移动光线
+                    ctx.strokeStyle = 'rgba(212, 168, 83, 0.1)';
+                    ctx.lineWidth = 1;
+                    for (let x = 0; x < width; x += 30) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, 0);
+                        ctx.lineTo(x, height);
+                        ctx.stroke();
+                    }
+                    for (let y = 0; y < height; y += 30) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, y);
+                        ctx.lineTo(width, y);
+                        ctx.stroke();
+                    }
+
+                    // 移动的光点
+                    const lightX = (time * 2) % width;
+                    const gradient = ctx.createRadialGradient(lightX, height / 2, 0, lightX, height / 2, 80);
+                    gradient.addColorStop(0, 'rgba(212, 168, 83, 0.5)');
+                    gradient.addColorStop(1, 'rgba(212, 168, 83, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, width, height);
+                } else if (type === 2) {
+                    // 同心圆波纹
+                    for (let i = 0; i < 5; i++) {
+                        const radius = ((time + i * 40) % 200);
+                        ctx.beginPath();
+                        ctx.arc(width / 2, height / 2, radius, 0, Math.PI * 2);
+                        ctx.strokeStyle = `rgba(78, 205, 196, ${0.3 - radius / 700})`;
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                } else if (type === 3) {
+                    // 粒子场
+                    for (let i = 0; i < 30; i++) {
+                        const x = (Math.sin(time * 0.01 + i) * 0.5 + 0.5) * width;
+                        const y = (Math.cos(time * 0.01 + i * 0.7) * 0.5 + 0.5) * height;
+                        
+                        ctx.beginPath();
+                        ctx.arc(x, y, 2, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(224, 122, 95, ${0.3 + Math.sin(time * 0.05 + i) * 0.2})`;
+                        ctx.fill();
+
+                        // 连线
+                        for (let j = i + 1; j < 30; j++) {
+                            const x2 = (Math.sin(time * 0.01 + j) * 0.5 + 0.5) * width;
+                            const y2 = (Math.cos(time * 0.01 + j * 0.7) * 0.5 + 0.5) * height;
+                            const dist = Math.sqrt((x - x2) ** 2 + (y - y2) ** 2);
+                            if (dist < 80) {
+                                ctx.beginPath();
+                                ctx.moveTo(x, y);
+                                ctx.lineTo(x2, y2);
+                                ctx.strokeStyle = `rgba(224, 122, 95, ${(1 - dist / 80) * 0.2})`;
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+
+                time++;
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // 延迟初始化文章Canvas
+        setTimeout(() => {
+            createArticleCanvas('articleCanvas1', 1);
+            createArticleCanvas('articleCanvas2', 2);
+            createArticleCanvas('articleCanvas3', 3);
+        }, 100);
+
+        // ========== 交互演示区粒子系统 ==========
+        const demoCanvas = document.getElementById('demoCanvas');
+        const demoCtx = demoCanvas.getContext('2d');
+        let demoMouseX = 0, demoMouseY = 0;
+        const demoParticles = [];
+        let lastTime = performance.now();
+        let frameCount = 0;
+        let fps = 0;
+
+        function resizeDemoCanvas() {
+            demoCanvas.width = demoCanvas.offsetWidth * 2;
+            demoCanvas.height = demoCanvas.offsetHeight * 2;
+            demoCtx.scale(2, 2);
+        }
+        resizeDemoCanvas();
+
+        // 初始化粒子
+        function initDemoParticles() {
+            demoParticles.length = 0;
+            const width = demoCanvas.width / 2;
+            const height = demoCanvas.height / 2;
+            
+            for (let i = 0; i < 200; i++) {
+                demoParticles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    size: 2 + Math.random() * 3,
+                    baseSize: 2 + Math.random() * 3,
+                    color: `hsl(${30 + Math.random() * 30}, 70%, 60%)`
+                });
+            }
+        }
+        initDemoParticles();
+
+        demoCanvas.addEventListener('mousemove', (e) => {
+            const rect = demoCanvas.getBoundingClientRect();
+            demoMouseX = e.clientX - rect.left;
+            demoMouseY = e.clientY - rect.top;
+        });
+
+        demoCanvas.addEventListener('mouseleave', () => {
+            demoMouseX = -1000;
+            demoMouseY = -1000;
+        });
+
+        function animateDemo() {
+            const width = demoCanvas.width / 2;
+            const height = demoCanvas.height / 2;
+
+            // 清除画布
+            demoCtx.fillStyle = '#0a0a0c';
+            demoCtx.fillRect(0, 0, width, height);
+
+            // 绘制背景网格
+            demoCtx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            demoCtx.lineWidth = 1;
+            for (let x = 0; x < width; x += 40) {
+                demoCtx.beginPath();
+                demoCtx.moveTo(x, 0);
+                demoCtx.lineTo(x, height);
+                demoCtx.stroke();
+            }
+            for (let y = 0; y < height; y += 40) {
+                demoCtx.beginPath();
+                demoCtx.moveTo(0, y);
+                demoCtx.lineTo(width, y);
+                demoCtx.stroke();
+            }
+
+            // 更新和绘制粒子
+            demoParticles.forEach(p => {
+                // 鼠标吸引
+                if (demoMouseX > 0 && demoMouseY > 0) {
+                    const dx = demoMouseX - p.x;
+                    const dy = demoMouseY - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 150) {
+                        const force = (150 - dist) / 150;
+                        p.vx += dx * force * 0.01;
+                        p.vy += dy * force * 0.01;
+                        p.size = p.baseSize + force * 4;
+                    } else {
+                        p.size += (p.baseSize - p.size) * 0.1;
+                    }
+                }
+
+                // 应用速度
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // 阻尼
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+
+                // 边界反弹
+                if (p.x < 0 || p.x > width) p.vx *= -1;
+                if (p.y < 0 || p.y > height) p.vy *= -1;
+                p.x = Math.max(0, Math.min(width, p.x));
+                p.y = Math.max(0, Math.min(height, p.y));
+
+                // 绘制粒子
+                demoCtx.beginPath();
+                demoCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                demoCtx.fillStyle = p.color;
+                demoCtx.fill();
+            });
+
+            // 绘制连线
+            demoCtx.strokeStyle = 'rgba(212, 168, 83, 0.1)';
+            demoCtx.lineWidth = 1;
+            for (let i = 0; i < demoParticles.length; i++) {
+                for (let j = i + 1; j < demoParticles.length; j++) {
+                    const dx = demoParticles[i].x - demoParticles[j].x;
+                    const dy = demoParticles[i].y - demoParticles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 60) {
+                        demoCtx.beginPath();
+                        demoCtx.moveTo(demoParticles[i].x, demoParticles[i].y);
+                        demoCtx.lineTo(demoParticles[j].x, demoParticles[j].y);
+                        demoCtx.stroke();
+                    }
+                }
+            }
+
+            // 绘制鼠标光晕
+            if (demoMouseX > 0 && demoMouseY > 0) {
+                const gradient = demoCtx.createRadialGradient(demoMouseX, demoMouseY, 0, demoMouseX, demoMouseY, 100);
+                gradient.addColorStop(0, 'rgba(78, 205, 196, 0.2)');
+                gradient.addColorStop(1, 'rgba(78, 205, 196, 0)');
+                demoCtx.fillStyle = gradient;
+                demoCtx.fillRect(0, 0, width, height);
+            }
+
+            // 更新统计
+            frameCount++;
+            const now = performance.now();
+            if (now - lastTime >= 1000) {
+                fps = frameCount;
+                frameCount = 0;
+                lastTime = now;
+            }
+
+            document.getElementById('particleCount').textContent = demoParticles.length;
+            document.getElementById('fps').textContent = fps;
+
+            requestAnimationFrame(animateDemo);
+        }
+        animateDemo();
+
+        // ========== 滚动显示动画 ==========
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal, .timeline-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ========== 表单提交 ==========
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('.submit-btn');
+            const originalText = btn.textContent;
+            btn.textContent = '信号已发送';
+            btn.style.background = 'var(--gradient-cool)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = 'var(--gradient-warm)';
+                e.target.reset();
+            }, 2000);
+        });
+
+        // ========== 平滑滚动 ==========
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ========== 窗口大小变化处理 ==========
+        window.addEventListener('resize', () => {
+            resizeDemoCanvas();
+            initDemoParticles();
+        });
+    </script>
+</body>
+</html>
