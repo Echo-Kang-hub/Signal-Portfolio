@@ -10,8 +10,6 @@
 
 ## 截图
 
-> 📝 注意：请将项目截图命名为 `preview.png` 放入 `src/assets/images/` 目录
-
 ![Creative Signals](src/assets/images/preview.png)
 
 ## 特性
